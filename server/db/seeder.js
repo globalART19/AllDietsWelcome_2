@@ -1,7 +1,10 @@
 /* eslint-disable complexity */
 /* eslint-disable max-statements */
-const pluralizer = require('pluralizer')
-const {session} = require('./index')
+const { session, db } = require('./index');
+
+const createDiet = async (name, isInclude) => {
+  return null;
+};
 
 const nodeBuilder = async (node) => {
   await session.run(
@@ -9,11 +12,11 @@ const nodeBuilder = async (node) => {
       ON CREATE SET i.note=$note, i.general=$general
       ON MATCH SET i.note=$note, i.general=$general`,
       { name: node.ingredient, note: node.note, general: node.general}
-  )
+  );
 
   await Object.keys(node).forEach(async prop => {
-    const propCap = prop[0].toUpperCase() + prop.substring(1)
-    const propVal = node[prop]
+    const propCap = prop[0].toUpperCase() + prop.substring(1);
+    const propVal = node[prop];
     switch(propCap) {
       case 'Technique':
         await propVal.forEach(async value => {
@@ -24,9 +27,9 @@ const nodeBuilder = async (node) => {
             MERGE (i)-[:PROP]->(p)
             `,
             { value, iname: node.ingredient }
-          )
-        })
-        break
+          );
+        });
+        break;
       case 'Season':
         await session.run(
           `MATCH (i:Ingredient {name: $iname})
@@ -137,4 +140,4 @@ const nodeBuilder = async (node) => {
 
 
 
-module.exports = {nodeBuilder}
+module.exports = { nodeBuilder }
