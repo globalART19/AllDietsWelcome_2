@@ -1,0 +1,29 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  height: 100vh;
+  /* background-color: #E5FFEA */
+  background-color: white;
+}
+
+#app {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+}
+
+form div {
+  margin: 1em;
+  display: inline-block;
+}

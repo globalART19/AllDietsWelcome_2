@@ -1,0 +1,12 @@
+//https://coolors.co/131200-588947-c0c781-b1c1c0-dcedb9
+const colors1 = {
+  background: '#DCEDB9',
+  text: '#131200',
+  main: '#588947',
+  lowlight: '#C0C781',
+  highlight: '#B1C1C0'
+}
+
+export const logo = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABF0lEQVRoQ+2W4Q3CIBBGYRwncC0HMP5oHMC1OoHjnGkaYq1Aj+OO8mn5X/LePWjwREQOePlDYKPe6ULu+fBmjU0LTPBhWUmYCSzhLSVMBGLwVhKHwPp25qZvUUG9ALQAB167gmoBaIESeM0KagWgBSTwWhVUCkAL1MBrVKguAC3g3VXtmUzuLtqrqgC0gCZ8GL2kgrgAtIAFvLSCqAC0gCW8pEJxAWiBFvClFdgFWsJPEtxf6n8ItJ5+yTFiFYAW2AueW2GzALTA3vCcCvkCt7Poja7+0TAmt0wL9AIf0BMSPyrQ2/QzFeIFoAV6hU9U+C4ALdA7fKTCZwFoART4VYV3AWgBNPhFhbnAIaD+fONtOIwO/g68ABH1KoAOyMuyAAAAAElFTkSuQmCC'
+
+export default colors1
