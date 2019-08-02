@@ -4,7 +4,9 @@ const morgan = require('morgan')
 const compression = require('compression')
 const sessionExpress = require('express-session')
 const passport = require('passport')
+const SequelizeStore = require('connect-session-sequelize')(sessionExpress.Store)
 const {db, session} = require('./db')
+const sessionStore = new SequelizeStore({ db })
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
@@ -25,17 +27,16 @@ if (process.env.NODE_ENV !== 'production') require('../secrets')
 passport.serializeUser((user, done) => done(null, user.id))
 
 passport.deserializeUser(async (username, done) => {
+  db.models.user.findById(id)
+    .then(user => done(null, user))
+    .catch(done);
   // try {
-    db.models.user.findById(id)
-      .then(user => done(null, user))
-      .catch(done);
-
-    // const response = await session.run(`
-    //   MATCH (u:user)
-    //   WHERE u.username =${username}
-    //   RETURN u
-    // `, { username: username })
-    // const user = await response.records[0]._fields[0].properties
+  //   const response = await session.run(`
+  //     MATCH (u:user)
+  //     WHERE u.username =${username}
+  //     RETURN u
+  //   `, { username: username })
+  //   const user = await response.records[0]._fields[0].properties
   //   done(null, user)
   // } catch (err) {
   //   done(err)
@@ -57,7 +58,7 @@ const createApp = () => {
   app.use(
     sessionExpress({
       secret: process.env.SESSION_SECRET || 'my best friend is Cody',
-      // store: sessionStore,
+      store: sessionStore,
       resave: false,
       saveUninitialized: false
     })
@@ -123,7 +124,7 @@ if (require.main === module) {
     .then(createApp)
     .then(startListening);
 
-  bootApp();
+  // bootApp();
 } else {
   createApp();
 }
