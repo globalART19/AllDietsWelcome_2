@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const compression = require('compression')
 const sessionExpress = require('express-session')
 const passport = require('passport')
-const {session} = require('./db')
+const {db, session} = require('./db')
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
@@ -19,22 +19,27 @@ module.exports = app
  * Node process on process.env
  */
 if (process.env.NODE_ENV !== 'production') require('../secrets')
+if (process.env.NODE_ENV !== 'production') require('../secrets')
 
 // passport registration
-passport.serializeUser((user, done) => done(null, user.username))
+passport.serializeUser((user, done) => done(null, user.id))
 
 passport.deserializeUser(async (username, done) => {
-  try {
-    const response = await session.run(`
-      MATCH (u:user)
-      WHERE u.username =${username}
-      RETURN u
-    `, { username: username })
-    const user = await response.records[0]._fields[0].properties
-    done(null, user)
-  } catch (err) {
-    done(err)
-  }
+  // try {
+    db.models.user.findById(id)
+      .then(user => done(null, user))
+      .catch(done);
+
+    // const response = await session.run(`
+    //   MATCH (u:user)
+    //   WHERE u.username =${username}
+    //   RETURN u
+    // `, { username: username })
+    // const user = await response.records[0]._fields[0].properties
+  //   done(null, user)
+  // } catch (err) {
+  //   done(err)
+  // }
 })
 
 const createApp = () => {
@@ -102,16 +107,23 @@ const startListening = () => {
   require('./socket')(io)
 }
 
+const syncDb = () => db.sync()
+
 async function bootApp() {
-  await createApp()
-  await startListening()
+  await createApp();
+  await startListening();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)
 // It will evaluate false when this module is required by another module - for example,
 // if we wanted to require our app in a test spec
 if (require.main === module) {
-  bootApp()
+  sessionStore.sync()
+    .then(syncDb)
+    .then(createApp)
+    .then(startListening);
+
+  bootApp();
 } else {
-  createApp()
+  createApp();
 }
