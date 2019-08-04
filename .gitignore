@@ -4,6 +4,5 @@ public/bundle.js.map
 secrets.js
 .DS_Store
 npm-debug.log
-yarn-error.log
-bible.txt
-bibletest.txt
+yarn-error.lo
+script/data/*

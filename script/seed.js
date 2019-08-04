@@ -1,11 +1,19 @@
 'use strict';
 
-const { db } = require('../server/db');
-const { User, Diet } = require('../server/db/models');
+const { db, session } = require('../server/db');
+const { User } = require('../server/db/models');
+const { createDiet, createIngredient, createDiet, connectIngredients } = require('./seeder');
+const { ingredientSeed, categorySeed, dietSeed } = require('./data/node-seed-data');
 
 async function seed() {
+  // clear DBs for seeding
   await db.sync({force: true});
-  console.log('db synced!');
+  console.log('db synced and cleared!');
+  await session.run(`
+    MATCH (n)
+    DETATCH DELETE n
+  `);
+  console.log('graph db synced and cleared!');
 
   const users = await Promise.all([
     User.create({email: 'cody@email.com', password: '123'}),
@@ -14,13 +22,17 @@ async function seed() {
 
   console.log(`seeded ${users.length} users`);
 
-  const diets = await Promise.all([
-    Diet.create({name: 'AIP', type: 'restrict'}),
-    Diet.create({ name: 'Vegan', type: 'restrict' })
-  ]);
+  await Promise.all(dietSeed.forEach(diet => createDiet(diet)));
+  console.log('seeded diet nodes');
 
+  await Promise.all(categorySeed.forEach(category => createCategory(category)));
+  console.log('seeded category nodes');
 
-  console.log(`seeded ${diets.length} diets`);
+  await Promise.all(ingredientSeed.forEach(ingredient => createIngredient(ingredient)));
+  console.log('seeded ingredient nodes');
+
+  await Promise.all(connectIngredients.forEach(ingredient => connectIngredients(ingredient)));
+  console.log('seeded connections for ingredients');
 
   console.log(`seeded successfully`);
 };
