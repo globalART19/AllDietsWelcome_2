@@ -23,13 +23,13 @@ async function seed() {
   console.log(`seeded ${users.length} users`);
 
   const diets = await Promise.all(dietSeed.map(diet => createDiet(diet)));
-  console.log('seeded diet nodes', diets);
+  console.log('seeded diet nodes', diets.length);
 
   const categories = await Promise.all(categorySeed.map(category => createCategory(category)));
-  console.log('seeded category nodes', categories);
+  console.log('seeded category nodes', categories.length);
 
   const ingredients = await Promise.all(ingredientSeed.map(ingredient => createIngredient(ingredient)));
-  console.log('seeded ingredient nodes', ingredients);
+  console.log('seeded ingredient nodes', ingredients.length);
 
   await Promise.all(ingredientSeed.map(ingredient => connectIngredients(ingredient)));
   console.log('seeded connections for ingredients');
