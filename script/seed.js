@@ -2,7 +2,7 @@
 
 const { db, session } = require('../server/db');
 const { User } = require('../server/db/models');
-const { createDiet, createIngredient, createDiet, connectIngredients } = require('./seeder');
+const { createDiet, createIngredient, connectIngredients } = require('./seeder');
 const { ingredientSeed, categorySeed, dietSeed } = require('./data/node-seed-data');
 
 async function seed() {
