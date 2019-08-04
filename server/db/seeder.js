@@ -1,9 +1,14 @@
 /* eslint-disable complexity */
 /* eslint-disable max-statements */
-const { session, db } = require('./index');
+const { session } = require('./index');
 
 const createDiet = async (name, isInclude) => {
-  return null;
+  await session.run(
+    `MERGE (d:Diet {name: $name})
+      ON CREATE SET d.isInclude=$isInclude
+      ON MATCH SET d.isInclude=$isInclude`,
+    { name: name, isInclude: isInclude}
+  );
 };
 
 const nodeBuilder = async (node) => {
