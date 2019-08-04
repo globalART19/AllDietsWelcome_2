@@ -18,17 +18,17 @@ const createCategory = async (category) => {
   );
 };
 
-const createIngredient = async (node) => {
+const createIngredient = async (ingredient) => {
   return session.run(
     `MERGE (i:Ingredient {name: $name})`,
-      { name: node.ingredient }
+      { name: ingredient.ingredient }
   );
 };
 
 const connectIngredients = async (node) => {
   // Connect ingredient to category
-  const proms = node.categories.map(cat => {
-    return session.run(
+  await node.categories.forEach(cat => {
+    session.run(
       `
       MATCH (i:Ingredient {name: $ingredient})
       MERGE (c:Category {name: $category})
@@ -39,18 +39,18 @@ const connectIngredients = async (node) => {
   });
 
   // connect ingredient to diets
-  node.diets.forEach(diet => {
-    proms.push(session.run(
+  await node.diets.forEach(diet => {
+    session.run(
       `
       MATCH (i:Ingredient {name: $ingredient})
       MERGE (d:Diet {name: $diet})
       MERGE (i)-[:IN]->(d)
       `,
       { ingredient: node.ingredient, diet }
-    ));
+    );
   })
 
-  return proms;
+  return;
 }
 
 module.exports = { createDiet, createCategory, createIngredient, connectIngredients }

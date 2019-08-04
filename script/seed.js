@@ -2,7 +2,7 @@
 
 const { db, session } = require('../server/db');
 const { User } = require('../server/db/models');
-const { createDiet, createIngredient, connectIngredients } = require('./seeder');
+const { createDiet, createCategory, createIngredient, connectIngredients } = require('./seeder');
 const { ingredientSeed, categorySeed, dietSeed } = require('./data/node-seed-data');
 
 async function seed() {
@@ -22,16 +22,16 @@ async function seed() {
 
   console.log(`seeded ${users.length} users`);
 
-  await Promise.all(dietSeed.forEach(diet => createDiet(diet)));
-  console.log('seeded diet nodes');
+  const diets = await Promise.all(dietSeed.map(diet => createDiet(diet)));
+  console.log('seeded diet nodes', diets);
 
-  await Promise.all(categorySeed.forEach(category => createCategory(category)));
-  console.log('seeded category nodes');
+  const categories = await Promise.all(categorySeed.map(category => createCategory(category)));
+  console.log('seeded category nodes', categories);
 
-  await Promise.all(ingredientSeed.forEach(ingredient => createIngredient(ingredient)));
-  console.log('seeded ingredient nodes');
+  const ingredients = await Promise.all(ingredientSeed.map(ingredient => createIngredient(ingredient)));
+  console.log('seeded ingredient nodes', ingredients);
 
-  await Promise.all(connectIngredients.forEach(ingredient => connectIngredients(ingredient)));
+  await Promise.all(ingredientSeed.map(ingredient => connectIngredients(ingredient)));
   console.log('seeded connections for ingredients');
 
   console.log(`seeded successfully`);
