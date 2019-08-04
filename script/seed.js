@@ -11,7 +11,7 @@ async function seed() {
   console.log('db synced and cleared!');
   await session.run(`
     MATCH (n)
-    DETATCH DELETE n
+    DETACH DELETE n
   `);
   console.log('graph db synced and cleared!');
 
