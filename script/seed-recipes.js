@@ -40,7 +40,7 @@ async function seed() {
 
     const recipes = await Promise.all(
       res.data.hits.map(recipe => {
-        return Recipe.create({ search, recipe: JSON.stringify(recipe.recipe) });
+        return Recipe.create({ searchTerm: q, recipe: JSON.stringify(recipe.recipe) });
       })
     );
 

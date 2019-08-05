@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const recipestore = require('./recipe-store');
 
 const Recipe = recipestore.define('recipe', {
-  search: {
+  searchTerm: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
@@ -10,7 +10,7 @@ const Recipe = recipestore.define('recipe', {
     }
   },
   recipe: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false,
     validate: {
       notEmpty: true
