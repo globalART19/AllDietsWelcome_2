@@ -8,7 +8,7 @@ const apiURI = `https://api.edamam.com/search?app_id=${EDAMAM_API_ID}&app_key=${
 
 async function seed() {
   // sync db
-  await recipestore.sync({force: true});
+  await recipestore.sync();
 
   console.log(process.argv);
   if (process.argv.length < 2) {
