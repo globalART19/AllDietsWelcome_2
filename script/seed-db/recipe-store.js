@@ -7,7 +7,7 @@ const recipestore = new Sequelize(
   }
 );
 
-module.exports = { recipestore };
+module.exports = recipestore;
 
 // This is a global Mocha hook used for resource cleanup.
 // Otherwise, Mocha v4+ does not exit after tests.

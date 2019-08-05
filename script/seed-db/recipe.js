@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const { db } = require('./seed-db');
+const recipestore = require('./recipe-store');
 
-const Recipe = db.define('recipe', {
+const Recipe = recipestore.define('recipe', {
   search: {
     type: Sequelize.STRING,
     allowNull: false,

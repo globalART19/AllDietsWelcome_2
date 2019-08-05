@@ -1,8 +1,8 @@
 'use strict';
 
 const axios = require('axios');
-const { recipestore, Recipe } = require('./seed-recipestore');
-const { EDAMAM_API_ID, EDAMAM_API_KEY } = require('/secrets')
+const { recipestore, Recipe } = require('./seed-db');
+const { EDAMAM_API_ID, EDAMAM_API_KEY } = require('../secrets')
 
 const apiURI = `https://api.edamam.com/search?app_id=${EDAMAM_API_ID}&app_key=${EDAMAM_API_KEY}`
 
@@ -16,25 +16,30 @@ async function seed() {
     return;
   }
 
-  const start = process.argv[0];
-  const max = process.argv[1];
-  const q = process.argv[2] || 'burger';
+  const start = +process.argv[2];
+  const max = +process.argv[3];
+  const q = process.argv[4] || 'burger';
 
   let count = start;
   let lastLength = 1;
-  while (count < max || !lastLength) {
+  while (count < max && lastLength) {
     const from = start;
     const to = start + 100;
 
-    const data = await axios.get(apiURI, {
+    console.log(apiURI, q, from, to)
+    const res = await axios.get(apiURI, {
       params: {
         q,
         from,
         to
       }
     });
+    console.log('data', res.data, 'hits:', res.data.hits)
+
+    if (res.data.count < max) max = res.data.count;
+
     const recipes = await Promise.all(
-      data.hits.map(recipe => {
+      res.data.hits.map(recipe => {
         return Recipe.create({ search, recipe: JSON.stringify(recipe.recipe) });
       })
     );
@@ -47,6 +52,8 @@ async function seed() {
 
     console.log('start', start, 'max', max, 'count', count, 'length', recipes.length, 'recipes', recipes)
   }
+
+  console.log('done seeding')
 };
 
 // We've separated the `seed` function from the `runSeed` function.
