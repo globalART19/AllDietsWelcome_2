@@ -8,25 +8,33 @@ const apiURI = `https://api.edamam.com/search?app_id=${EDAMAM_API_ID}&app_key=${
 
 const { testResponse } = require('./data/test-response.js');
 
+async function throttleLimit() {
+  return new Promise(() => setTimeout(() => {}, 12000));
+}
+
 async function seedRecipes() {
   // sync db
   await recipestore.sync();
 
   console.log(process.argv);
-  if (process.argv.length < 2) {
-    console.log('start index and max index must be included in command script args');
-    return;
-  }
+  // if (process.argv.length < 2) {
+  //   console.log('start index and max index must be included in command script args');
+  //   return;
+  // }
 
-  const start = +process.argv[2];
-  const max = +process.argv[3];
-  const q = process.argv[4] || 'burger';
+  // const startInput = +process.argv[2];
+  // const maxInput = +process.argv[3];
+  // const q = process.argv[4] || 'burger';
+  const q = process.argv[2] || 'burger';
+  const from = 0;
+  const to = 100;
 
-  let count = start;
-  let lastLength = 1;
-  while (count < max && lastLength) {
-    const from = start;
-    const to = start + 100;
+  // let max = maxInput;
+  // let count = startInput;
+  // let lastLength = 1;
+  // while (count < max && lastLength) {
+    // const from = count;
+    // const to = count + 99;
 
     console.log(apiURI, q, from, to)
     const res = await axios.get(apiURI, {
@@ -39,7 +47,7 @@ async function seedRecipes() {
     // const res = { data: testResponse };
     console.log('data', res.data, 'hits length:', res.data.hits.length)
 
-    if (res.data.count < max) max = res.data.count;
+    // if (res.data.count < max) max = res.data.count;
 
     const recipes = await Promise.all(
       res.data.hits.map(h => {
@@ -57,12 +65,14 @@ async function seedRecipes() {
 
     console.log(`successfully seeded ${recipes.length} more recipes!`);
 
-    count += 100;
-    // lastLength = recipes.length;
-    lastLength = 0;
+    // console.log('start', count, 'max', max, 'count', count + 100, 'length', recipes.length)
 
-    console.log('start', start, 'max', max, 'count', count, 'length', recipes.length)
-  }
+    // count += 100;
+    // lastLength = recipes.length;
+
+    // api throttling delay
+    // await throttleLimit();
+  // }
 
   console.log('done seeding')
 };
