@@ -6,9 +6,9 @@ const { EDAMAM_API_ID, EDAMAM_API_KEY } = require('../secrets')
 
 const apiURI = `https://api.edamam.com/search?app_id=${EDAMAM_API_ID}&app_key=${EDAMAM_API_KEY}`
 
-async function seed() {
+async function seedRecipes() {
   // sync db
-  await recipestore.sync();
+  await recipestore.sync({force: true});
 
   console.log(process.argv);
   if (process.argv.length < 2) {
@@ -62,7 +62,7 @@ async function seed() {
 async function runSeed() {
   console.log('seeding...');
   try {
-    await seed();
+    await seedRecipes();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
@@ -81,4 +81,4 @@ if (module === require.main) {
 }
 
 // we export the seed function for testing purposes (see `./seed.spec.js`)
-module.exports = seed;
+module.exports = seedRecipes;
