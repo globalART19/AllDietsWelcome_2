@@ -2,6 +2,11 @@ const Sequelize = require('sequelize');
 const recipestore = require('./recipe-store');
 
 const Recipe = recipestore.define('recipe', {
+  id: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    primaryKey: true
+  },
   searchTerm: {
     type: Sequelize.STRING,
     allowNull: false,

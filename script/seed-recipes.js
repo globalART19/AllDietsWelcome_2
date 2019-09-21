@@ -10,7 +10,7 @@ const { testResponse } = require('./data/test-response.js');
 
 async function seedRecipes() {
   // sync db
-  await recipestore.sync({force: true});
+  await recipestore.sync();
 
   console.log(process.argv);
   if (process.argv.length < 2) {
@@ -29,21 +29,22 @@ async function seedRecipes() {
     const to = start + 100;
 
     console.log(apiURI, q, from, to)
-    // const res = await axios.get(apiURI, {
-    //   params: {
-    //     q,
-    //     from,
-    //     to
-    //   }
-    // });
-    const res = { data: testResponse };
-    // console.log('data', res.data, 'hits:', res.data.hits)
+    const res = await axios.get(apiURI, {
+      params: {
+        q,
+        from,
+        to
+      }
+    });
+    // const res = { data: testResponse };
+    console.log('data', res.data, 'hits length:', res.data.hits.length)
 
     if (res.data.count < max) max = res.data.count;
 
     const recipes = await Promise.all(
       res.data.hits.map(h => {
         return Recipe.create({
+          id: h.recipe.uri.split('#')[1],
           searchTerm: q,
           recipe: JSON.stringify(h.recipe),
           label: h.recipe.label,
