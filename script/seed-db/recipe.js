@@ -15,6 +15,21 @@ const Recipe = recipestore.define('recipe', {
     validate: {
       notEmpty: true
     }
+  },
+  label: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  ingredients: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+    allowNull: false
+  },
+  image: {
+    type: Sequelize.STRING
+  },
+  url: {
+    type: Sequelize.STRING,
+    allowNull: false
   }
 });
 

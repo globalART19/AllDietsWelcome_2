@@ -6,6 +6,8 @@ const { EDAMAM_API_ID, EDAMAM_API_KEY } = require('../secrets')
 
 const apiURI = `https://api.edamam.com/search?app_id=${EDAMAM_API_ID}&app_key=${EDAMAM_API_KEY}`
 
+const testResponse = './data/test-response';
+
 async function seedRecipes() {
   // sync db
   await recipestore.sync({force: true});
@@ -27,20 +29,28 @@ async function seedRecipes() {
     const to = start + 100;
 
     console.log(apiURI, q, from, to)
-    const res = await axios.get(apiURI, {
-      params: {
-        q,
-        from,
-        to
-      }
-    });
+    // const res = await axios.get(apiURI, {
+    //   params: {
+    //     q,
+    //     from,
+    //     to
+    //   }
+    // });
+    const res = testResponse;
     console.log('data', res.data, 'hits:', res.data.hits)
 
     if (res.data.count < max) max = res.data.count;
 
     const recipes = await Promise.all(
       res.data.hits.map(recipe => {
-        return Recipe.create({ searchTerm: q, recipe: JSON.stringify(recipe.recipe) });
+        return Recipe.create({
+          searchTerm: q,
+          recipe: JSON.stringify(recipe.recipe),
+          label: recipe.label,
+          image: recipe.image,
+          url: recipe.url,
+          ingredients: recipe.ingredients.map(ingred => ingred.food)
+        });
       })
     );
 
