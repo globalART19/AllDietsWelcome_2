@@ -43,7 +43,7 @@ async function seedRecipes() {
 
     const recipes = await Promise.all(
       res.data.hits.map(h => {
-        return Recipe.create({
+        return Recipe.upsert({
           id: h.recipe.uri.split('#')[1],
           searchTerm: q,
           recipe: JSON.stringify(h.recipe),
