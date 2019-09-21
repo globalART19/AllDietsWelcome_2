@@ -60,7 +60,7 @@ async function seedRecipes() {
     // lastLength = recipes.length;
     lastLength = 0;
 
-    console.log('start', start, 'max', max, 'count', count, 'length', recipes.length, 'recipes', recipes)
+    console.log('start', start, 'max', max, 'count', count, 'length', recipes.length)
   }
 
   console.log('done seeding')
